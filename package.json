@@ -1,0 +1,26 @@
+{
+  "name": "canned-response-gas",
+  "version": "1.0.0",
+  "description": "test 123",
+  "main": "index.js",
+  "scripts": {
+    "push": "clasp push",
+    "pull": "clasp pull",
+    "apis": "clasp apis",
+    "logs": "clasp logs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stoplion/Canned-Response-GAS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stoplion/Canned-Response-GAS/issues"
+  },
+  "homepage": "https://github.com/stoplion/Canned-Response-GAS#readme",
+  "dependencies": {
+    "@types/google-apps-script": "^1.0.81"
+  }
+}

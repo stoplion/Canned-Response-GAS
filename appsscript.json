@@ -1,0 +1,40 @@
+{
+  "timeZone": "America/Los_Angeles",
+  "dependencies": {},
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/documents.currentonly",
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/presentations.currentonly",
+    "https://www.googleapis.com/auth/gmail.addons.current.action.compose",
+    "https://www.googleapis.com/auth/gmail.addons.execute"
+  ],
+  "addOns": {
+    "common": {
+      "name": "Canned Responses",
+      "logoUrl": "https://storage.googleapis.com/gwao_course/LOGO%20120x120.png",
+      "layoutProperties": {
+        "primaryColor": "#1e2328",
+        "secondaryColor": "#188038"
+      },
+      "homepageTrigger": {
+        "runFunction": "onHomepage"
+      },
+      "universalActions": [
+        {
+          "label": "Course",
+          "openLink": "https://yagisanatode.com"
+        },
+        {
+          "label": "Course Assets",
+          "openLink": "https://yagisanatode.com"
+        }
+      ]
+    },
+    "docs": {},
+    "slides": {},
+    "sheets": {},
+    "gmail": {}
+  }
+}
