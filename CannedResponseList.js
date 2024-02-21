@@ -251,20 +251,31 @@ function createResponseListFooter(responseListData) {
 
   if (activePosition === 0) {
     //first page
-    footer
-      .setPrimaryButton(CardService.newTextButton('NEXT >>'))
-      .setOnClickAction(sendOnCannedResponseListUpdate('next'))
+    footer.setPrimaryButton(
+      CardService.newTextButton()
+        .setText('NEXT >>')
+        .setOnClickAction(setOnClickAction('next'))
+    )
   } else if (activePosition === length) {
     //last page
-    footer
-      .setPrimaryButton(CardService.newTextButton('<< PREVIOUS'))
-      .setOnClickAction(sendOnCannedResponseListUpdate('previous'))
+    footer.setPrimaryButton(
+      CardService.newTextButton()
+        .setText('<< PREVIOUS')
+        .setOnClickAction(sendOnCannedResponseListUpdate('previous'))
+    )
   } else {
     // in the middle
     footer
-      .setPrimaryButton(CardService.newTextButton('NEXT >>'))
-      .setSecondaryButton(CardService.newTextButton('<< PREVIOUS'))
-      .setOnClickAction(sendOnCannedResponseListUpdate('previous'))
+      .setPrimaryButton(
+        CardService.newTextButton()
+          .setText('NEXT >>')
+          .setOnClickAction(sendOnCannedResponseListUpdate('next'))
+      )
+      .setSecondaryButton(
+        CardService.newTextButton()
+          .setText('<< PREVIOUS')
+          .setOnClickAction(sendOnCannedResponseListUpdate('previous'))
+      )
   }
 
   return footer
