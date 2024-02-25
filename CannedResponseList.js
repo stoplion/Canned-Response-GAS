@@ -265,17 +265,17 @@ function createResponseListFooter(responseListData) {
     )
   } else {
     // in the middle
-    footer
-      .setPrimaryButton(
-        CardService.newTextButton()
-          .setText('NEXT >>')
-          .setOnClickAction(sendOnCannedResponseListUpdate('next'))
-      )
-      .setSecondaryButton(
-        CardService.newTextButton()
-          .setText('<< PREVIOUS')
-          .setOnClickAction(sendOnCannedResponseListUpdate('previous'))
-      )
+    footer.setPrimaryButton(
+      CardService.newTextButton()
+        .setText('NEXT >>')
+        .setOnClickAction(sendOnCannedResponseListUpdate('next'))
+    )
+
+    footer.setSecondaryButton(
+      CardService.newTextButton()
+        .setText('<< PREVIOUS')
+        .setOnClickAction(sendOnCannedResponseListUpdate('previous'))
+    )
   }
 
   return footer
