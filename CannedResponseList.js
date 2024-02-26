@@ -3,29 +3,26 @@ function onCannedReponseList(e) {
   // console.log(JSON.stringify(e, null, 2))
 
   const categoryId =
-    e.commonEventObject.formInputs.category.stringInputs.value[0]
+    e.commonEventObject.formInputs.category.stringInputs.value[0];
 
-  console.log({ categoryId })
+  console.log({ categoryId });
 
-  const ss = SpreadsheetApp.openById(SS_ID)
+  const ss = SpreadsheetApp.openById(SS_ID);
+  const sheet = ss
+    .getSheets()
+    .find((s) => Number(s.getSheetId()) === Number(categoryId));
 
-  const sheet = ss.getSheets().find((s) => {
-    // console.log('s.getSheetId()', typeof Number(s.getSheetId()), s.getSheetId())
-    // console.log('categoryId[0]', typeof Number(categoryId[0]), categoryId)
-    return Number(s.getSheetId()) === Number(categoryId)
-  })
-
-  const responseListData = getCannedResponseListData(sheet)
+  const responseListData = getCannedResponseListData(sheet);
 
   const card = CardService.newCardBuilder()
     .addSection(responseListDetailsSection(responseListData.sheetName))
-    .addSection(responseSelectionSection(responseListData))
+    .addSection(responseSelectionSection(responseListData));
 
   if (responseListData.rangeGroups.length > 1) {
-    card.setFixedFooter(createResponseListFooter(responseListData))
+    card.setFixedFooter(createResponseListFooter(responseListData));
   }
 
-  return card.build()
+  return card.build();
 }
 
 /**
@@ -34,8 +31,37 @@ function onCannedReponseList(e) {
  * @returns {CardService.Card}
  */
 function onCannedResponseListUpdate(e) {
-  console.log(JSON.stringify(e, null, 2))
+  const paramaters = e.commonEventObject.paramaters;
+
+  console.log(JSON.stringify(paramaters, null, 2)
+
+  // const sheetName = paramaters.sheetName;
+  // const rangeGroups = JSON.parse(paramaters.rangeGroups);
+  // const direction = paramaters.direction;
+
+  // const ss = SpreadsheetApp.openById(SS_ID);
+  // const sheet = ss.getSheetByName(sheetName);
+
+  // const responseListData = getCannedResponseListData(
+  //   sheet,
+  //   rangeGroups,
+  //   direction
+  // );
+
+  // console.log({
+  //   sheetName,
+  //   rangeGroups,
+  //   direction,
+  // });
+
+  // const card = CardService.newCardBuilder()
+  //   .addSection(responseListDetailsSection(responseListData.sheetName))
+  //   .addSection(responseSelectionSection(responseListData))
+  //   .setFixedFooter(createResponseListFooter(responseListData));
+
+  // return CardService.newNavigation().updateCard(card.build());
 }
+
 /**
  * An array of object for each response row in the Canned Response App Sheet
  * @typeDef {Object} listData
@@ -63,43 +89,43 @@ function getCannedResponseListData(
   rangeGroups = false,
   direction = undefined
 ) {
-  let sheetName, responseList
+  let sheetName, responseList;
 
   if (rangeGroups) {
     //selected next or previous
-    sheetName = sheet.getName()
+    sheetName = sheet.getName();
 
     // get prev selected range group
     // and the following group that was selected
     const lastActiveGroupIdx = rangeGroups.findIndex((group) => {
-      return group.isActive
-    })
+      return group.isActive;
+    });
 
     const nextActiveGroupIdx =
-      direction === 'next' ? lastActiveGroupIdx + 1 : lastActiveGroupIdx - 1
+      direction === 'next' ? lastActiveGroupIdx + 1 : lastActiveGroupIdx - 1;
 
     responseList = getResponseListData(
       sheet,
       rangeGroups[lastActiveGroupIdx].start,
       rangeGroups[nextActiveGroupIdx].end
-    )
+    );
 
-    rangeGroups[lastActiveGroupIdx].isActive = false
-    rangeGroups[nextActiveGroupIdx].isActive = true
+    rangeGroups[lastActiveGroupIdx].isActive = false;
+    rangeGroups[nextActiveGroupIdx].isActive = true;
   } else {
     // home page condition
-    sheetName = sheet.getName()
-    const lastDataRow = sheet.getLastRow()
+    sheetName = sheet.getName();
+    const lastDataRow = sheet.getLastRow();
 
     // returns array of object {start: number, end: number, isActive: boolean}[]
-    rangeGroups = getDisplayRanges(lastDataRow)
+    rangeGroups = getDisplayRanges(lastDataRow);
 
     // home page shows first range group
     responseList = getResponseListData(
       sheet,
       rangeGroups[0].start,
       rangeGroups[0].end
-    )
+    );
   }
 
   return {
@@ -107,7 +133,7 @@ function getCannedResponseListData(
     responseList,
     rangeGroups,
     direction: undefined,
-  }
+  };
 }
 
 /**
@@ -115,7 +141,7 @@ function getCannedResponseListData(
  * @returns {Array[Object]} - array of range objects
  */
 function getDisplayRanges(lastRow) {
-  let rangeGroups = []
+  let rangeGroups = [];
 
   if (lastRow === SHEET_TAB_ROW_START) {
     rangeGroups = [
@@ -124,25 +150,25 @@ function getDisplayRanges(lastRow) {
         end: 2,
         isActive: true,
       },
-    ]
+    ];
   } else {
     for (let i = SHEET_TAB_ROW_START; i < lastRow; i += RESPONSES_DISPLAYED) {
       // RESPONSES_DISPLAYED = 30, SHEET_TAB_ROW_START = 2
-      const indexPlusRange = i + RESPONSES_DISPLAYED - 1
+      const indexPlusRange = i + RESPONSES_DISPLAYED - 1;
 
       const range = {
         start: i,
         end: indexPlusRange > lastRow ? lastRow : indexPlusRange, //snap to last row if over
         isActive: false,
-      }
+      };
 
-      rangeGroups.push(range)
+      rangeGroups.push(range);
     }
 
-    rangeGroups[0].isActive = true
+    rangeGroups[0].isActive = true;
   }
 
-  return rangeGroups
+  return rangeGroups;
 }
 
 /**
@@ -160,10 +186,10 @@ function getResponseListData(sheet, startRow, endRow) {
         num: String(idx + startRow - SHEET_TAB_ROW_START + 1),
         sub: row[0],
         title: row[1],
-      }
-    })
+      };
+    });
 
-  return responseList
+  return responseList;
 }
 
 /**
@@ -174,17 +200,17 @@ function getResponseListData(sheet, startRow, endRow) {
 function responseListDetailsSection(sheetName) {
   const buttonSetWidget = CardService.newButtonSet()
     .addButton(addHomeButtonWidget())
-    .addButton(addAddButtonWidget(sheetName))
+    .addButton(addAddButtonWidget(sheetName));
 
   const responseHeaderTextWidget = CardService.newTextParagraph().setText(
     '<b>Select a canned response</b>'
-  )
+  );
 
   const section = CardService.newCardSection()
     .setHeader(`Category: <b>${sheetName}</b>`)
     .addWidget(buttonSetWidget)
-    .addWidget(responseHeaderTextWidget)
-  return section
+    .addWidget(responseHeaderTextWidget);
+  return section;
 }
 
 /**
@@ -192,13 +218,10 @@ function responseListDetailsSection(sheetName) {
  * @returns {CardService.CardSection}
  */
 function responseSelectionSection(responseListData) {
-  const responseList = responseListData.responseList
-  const sheetName = responseListData.sheetName
+  const responseList = responseListData.responseList;
+  const sheetName = responseListData.sheetName;
 
-  console.log('responseList', 'sheetName')
-  console.log({ responseList }, { sheetName })
-
-  const section = CardService.newCardSection()
+  const section = CardService.newCardSection();
 
   responseList.forEach((response) => {
     const responseDecoratedTextWidget = CardService.newDecoratedText()
@@ -213,12 +236,12 @@ function responseSelectionSection(responseListData) {
             responseNum: response.num,
           })
           .setLoadIndicator(CardService.LoadIndicator.SPINNER)
-      )
+      );
 
-    section.addWidget(responseDecoratedTextWidget)
-  })
+    section.addWidget(responseDecoratedTextWidget);
+  });
 
-  return section
+  return section;
 }
 
 /**
@@ -227,7 +250,7 @@ function responseSelectionSection(responseListData) {
  * @returns {CardService.CardSection}
  */
 function createResponseListFooter(responseListData) {
-  const footer = CardService.newFixedFooter()
+  const footer = CardService.newFixedFooter();
 
   /**
    * @param {String} direction
@@ -241,42 +264,42 @@ function createResponseListFooter(responseListData) {
         sheetName: responseListData.sheetName,
         direction,
         rangeGroups: JSON.stringify(responseListData.rangeGroups),
-      })
+      });
   }
 
   //determine what button to include
-  const rangeGroups = responseListData.rangeGroups
-  const length = rangeGroups.length - 1
-  const activePosition = rangeGroups.findIndex((group) => group.isActive)
+  const rangeGroups = responseListData.rangeGroups;
+  const length = rangeGroups.length - 1;
+  const activePosition = rangeGroups.findIndex((group) => group.isActive);
 
   if (activePosition === 0) {
     //first page
     footer.setPrimaryButton(
       CardService.newTextButton()
         .setText('NEXT >>')
-        .setOnClickAction(setOnClickAction('next'))
-    )
+        .setOnClickAction(sendOnCannedResponseListUpdate('next'))
+    );
   } else if (activePosition === length) {
     //last page
     footer.setPrimaryButton(
       CardService.newTextButton()
         .setText('<< PREVIOUS')
         .setOnClickAction(sendOnCannedResponseListUpdate('previous'))
-    )
+    );
   } else {
     // in the middle
     footer.setPrimaryButton(
       CardService.newTextButton()
         .setText('NEXT >>')
         .setOnClickAction(sendOnCannedResponseListUpdate('next'))
-    )
+    );
 
     footer.setSecondaryButton(
       CardService.newTextButton()
         .setText('<< PREVIOUS')
         .setOnClickAction(sendOnCannedResponseListUpdate('previous'))
-    )
+    );
   }
 
-  return footer
+  return footer;
 }
